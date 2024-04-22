@@ -7,16 +7,34 @@ namespace WebApplication1.Repositories;
 public class AnimalsRepository : IAnimalsRepository
 {
    
-    
+    //public async IEnumerable<Animal>
     public IEnumerable<Animal> GetAnimals(string orderBy)
     {
-        using SqlConnection con = new SqlConnection("Server=DB-MSSQL16;Database=2019SBD;Trusted_Connection=True");
+        using SqlConnection con = new SqlConnection("Server=db-mssql;Database=2019SBD;Integrated Security=True;TrustServerCertificate=True");
         con.Open();
+        //"Data Source = db-mssql; Initial Catalog = 2019SBD; Integrated Security = True"
         
         using SqlCommand cmd = new SqlCommand();
         cmd.Connection = con;
-        cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY @orderBy";
-        cmd.Parameters.AddWithValue("@orderBy", orderBy);
+        //cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY @orderBy";
+        //cmd.CommandText = $"SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY @orderBy";
+        switch (orderBy.ToLower())
+        {
+            case "name":
+                cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY name";
+                break;
+            case "description":
+                cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY description";
+                break;
+            case "category":
+                cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY category";
+                break;
+            case "area":
+                cmd.CommandText = "SELECT IdAnimal, Name, Description, Category, Area FROM Animal ORDER BY area";
+                break;
+        }
+        //cmd.Parameters.AddWithValue("@orderBy", orderBy);
+        //cmd.Parameters.AddWithValue("orderBy", orderBy);
         
         SqlDataReader sdr = cmd.ExecuteReader();
         List<Animal> animals = new List<Animal>();
@@ -38,7 +56,7 @@ public class AnimalsRepository : IAnimalsRepository
 
     public int CreateAnimal(Animal animal)
     {
-        using SqlConnection con = new SqlConnection("Server=DB-MSSQL16;Database=2019SBD;Trusted_Connection=True");
+        using SqlConnection con = new SqlConnection("Server=db-mssql;Database=2019SBD;Integrated Security=True;TrustServerCertificate=True");
         con.Open();
         using SqlCommand cmd = new SqlCommand();
         cmd.Connection = con;
@@ -54,7 +72,7 @@ public class AnimalsRepository : IAnimalsRepository
 
     public int UpdateAnimal(int idAnimal, Animal animal)
     {
-        using SqlConnection con = new SqlConnection("Server=DB-MSSQL16;Database=2019SBD;Trusted_Connection=True");
+        using SqlConnection con = new SqlConnection("Server=db-mssql;Database=2019SBD;Integrated Security=True;TrustServerCertificate=True");
         con.Open();
         using SqlCommand cmd = new SqlCommand();
         cmd.Connection = con;
@@ -71,7 +89,7 @@ public class AnimalsRepository : IAnimalsRepository
 
     public int DeleteAnimal(int idAnimal)
     {
-        using SqlConnection con = new SqlConnection("Server=DB-MSSQL16;Database=2019SBD;Trusted_Connection=True");
+        using SqlConnection con = new SqlConnection("Server=db-mssql;Database=2019SBD;Integrated Security=True;TrustServerCertificate=True");
         con.Open();
         using SqlCommand cmd = new SqlCommand();
         cmd.Connection = con;
